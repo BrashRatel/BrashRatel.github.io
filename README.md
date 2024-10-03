@@ -7,7 +7,7 @@ This page was generated mostly with Claude AI and quite a bit of steering and de
 ### What do it do...? ###
 
 It uses HTML CSS and Javascript to present a webpage that allows a user to enter in items/qnty/cost then split tabs and rearange items as necessary.
-It also has some functionts that will contact a LNBits server and requrest invoices then present them inline with each tab.
+It also has some functionts that will contact a LNBits server and request invoices then present them inline with each tab.
 
 I set it up under a github.pages (https://split.r00t.co) with the demo LNbits server and a demo wallet I created, but you should easily be able to download the HTML and host it locally then change the LNBits info to your own. 
 
@@ -15,6 +15,6 @@ I even added a gear on the top right of the interface so then you can input/chan
 
 ### Profit! ###
 
-If you like it let me know by sending me a tip! The default LNBits info of the page points to the demo wallet I setup. 😃🫴https://split.r00t.co
+If you like it let me know by sending me a tip! The default LNBits info on the page points to the demo wallet I setup. 😃🫴 https://split.r00t.co
 
 
