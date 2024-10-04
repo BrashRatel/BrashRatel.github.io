@@ -40,7 +40,7 @@
         svg { filter: drop-shadow(2px 2px 4px rgb(0 0 0 / 0.8 )); }
         .settings-icon { position: absolute; top: 10px; right: 10px; cursor: pointer; font-size: 24px; }
         .modal { display: none; position: fixed; z-index: 1; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.4); }
-        .modal-content { background-color: #000; margin: 15% auto; padding: 20px; border: 1px solid #888;  width: 80%; max-width: 500px; }
+        .modal-content { background-color: #000; margin: 15% auto; padding: 10px; border: 1px solid #888;  width: 80%; max-width: 500px; line-height: 18px; }
         .close { color: #aaa; float: right; font-size: 28px;  font-weight: bold;  cursor: pointer; }
         .close:hover, .close:focus { color: black; text-decoration: none; cursor: pointer; }
         .settings-form { display: flex; flex-direction: column; gap: 10px; }
@@ -68,16 +68,14 @@
             <span class="diss" onclick="dissInfo()">&times;</span>
             <h2>Welcome!</h2>
             <form class="info-form" onsubmit="dissInfo()">
-                <p>-Split with button at the top<br>
+                <p>-Create more tabs with Split:Tab button<br>
                     -Add items to each tab<br>
                     -Calulate (global) tip<br>
                     -Round grand gotal <small>(Only changes Tab 1)</small><br>
-                    -Generate invoices for each tab<br>
-                    <b>Profit!</b></p>
-                <p>The default settings point to a demo LNBits instance/wallet.<br>
-                    Tips Accepted 😁 </p>
-                <p>You can click the bitcoin logo to change URL/KEY.<br>
-                    Information added stays client side and isn't sent to the server.</p>
+                    -Generate invoices for each tab<br></p>
+                <p>Default settings point to a demo LNBits instance/wallet.<br>
+                    Tips greatly apprectiated 😁🫴 </p>
+                <p>Click the bitcoin logo to change URL/KEY.</p>
                 <button type="submit">Dismiss</button>
             </form>
         </div>
@@ -131,14 +129,14 @@
             <button onclick="applyCustomTip()">Apply Custom Tip</button>
 			<div class="rounding-buttons">
                 <button onclick="roundTotal('up')">Round Up</button>
-                <button onclick="roundTotal('down')">Round Down</button><span>(Applied to Tab 1)</span>
+                <button onclick="roundTotal('down')">Round Down</button>
             </div>
         </div>
     </div>
         <div id="grandTotal">Grand Total (All Tabs): $<span id="grandTotalAmount">0.00</span></div>
     </div>
     <footer>
-         <p>p0.4<br>
+         <p>p0.4.2<br>
     </footer>
     <script>
         let tabCount = 1;
