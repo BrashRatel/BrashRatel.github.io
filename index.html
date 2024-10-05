@@ -128,15 +128,15 @@
             <input type="number" id="customTipInput" placeholder="%" min="0" max="100" step="1">
             <button onclick="applyCustomTip()">Apply Custom Tip</button>
 			<div class="rounding-buttons">
-                <button onclick="roundTotal('up')">Round Up</button>
-                <button onclick="roundTotal('down')">Round Down</button>
+                <button onclick="roundTotal('up')" id="roundUp">Round Up</button>
+                <button onclick="roundTotal('down')" id="roundDown">Round Down</button>
             </div>
         </div>
     </div>
         <div id="grandTotal">Grand Total (All Tabs): $<span id="grandTotalAmount">0.00</span></div>
     </div>
     <footer>
-         <p>p0.4.2<br>
+         <p>p0.4.3<br>
     </footer>
     <script>
         let tabCount = 1;
@@ -334,6 +334,7 @@
                 updateTotal(targetTabId);
             }
         }
+
         function updateGrandTotal() {
             let grandTotal = 0;
             const tabs = document.getElementsByClassName('tab');
@@ -346,6 +347,7 @@
             }
             document.getElementById('grandTotalAmount').textContent = grandTotal.toFixed(2);
         }
+
 		function roundTotal(direction) {
 			const grandTotalElement = document.getElementById('grandTotalAmount');
 			const currentTotal = parseFloat(grandTotalElement.textContent);
@@ -353,29 +355,23 @@
 
 			if (direction === 'up') {
 				roundedTotal = Math.ceil(currentTotal);
+                document.getElementById("roundUp").disabled = true;
 			} else {
 				roundedTotal = Math.floor(currentTotal);
+                document.getElementById("roundDown").disabled = true;
 			}
 
 			const difference = roundedTotal - currentTotal;
 
-			// Update Grand Total
 			grandTotalElement.textContent = roundedTotal.toFixed(2);
 
-			// Update Tab 1 Total
-			const total1Element = document.getElementById('total1');
-			const currentTab1Total = parseFloat(total1Element.textContent);
-			const newTab1Total = (currentTab1Total + difference).toFixed(2);
-			total1Element.textContent = newTab1Total;
-
-			// Update Tab 1 Total with Tip (assuming it exists)
 			const totalWithTip1Element = document.getElementById('totalWithTip1');
-			if (totalWithTip1Element) {
-				const currentTotalWithTip = parseFloat(totalWithTip1Element.textContent);
-				const newTotalWithTip = (currentTotalWithTip + difference).toFixed(2);
-				totalWithTip1Element.textContent = newTotalWithTip;
-		    }
+			const currentTotalWithTip = parseFloat(totalWithTip1Element.textContent);
+			const newTotalWithTip = (currentTotalWithTip + difference).toFixed(2);
+			totalWithTip1Element.textContent = newTotalWithTip;
+	
         }
+
         function openSettingsModal() {
             document.getElementById('settingsModal').style.display = 'block';
             document.getElementById('apiUrl').value = API_URL;
@@ -393,11 +389,13 @@
             closeSettingsModal();
             console.log('Settings saved:', { API_URL, API_KEY });
         }
+
         window.onclick = function(event) {
             if (event.target == document.getElementById('settingsModal')) {
                 closeSettingsModal();
             }
         }
+
         function openInfoModal() {
             document.getElementById('infoModal').style.display = 'block';
         }
@@ -410,11 +408,13 @@
             event.preventDefault();
             closeInfoModal();
         }
+
         window.onclick = function(diss) {
             if (diss.target == document.getElementById('infoModal')) {
                 closeInfoModal();
             }
         }
+
         async function createPayment(tabId) {
             //let result = 0;
             document.getElementById("overlay").style.display = "block";
