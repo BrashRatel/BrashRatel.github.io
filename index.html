@@ -15,7 +15,7 @@
         .tip-buttons, .controls { margin-top: 5px; }
         button { margin-right: 10px; margin-top: 4px; padding: 8px 15px; background-color: #f7931a; text-shadow: 2px 2px 4px #000000; color: white; border: none; border-radius: 4px; cursor: pointer; transition: background-color 0.3s; }
         button:hover { background-color: #a36110; }
-        button:disabled { background-color: #cccccc; cursor: not-allowed; }
+        button:disabled { background-color: #585757; cursor: not-allowed; }
         input { margin-bottom: 10px; padding: 8px; border: 1px solid #ccc; border-radius: 4px; background-color: #555; color: #fff; }
         .total, .total-with-tip { font-weight: bold; margin-top: 10px; }
         .error { color: #ff6b6b; margin-top: 5px; }
@@ -28,7 +28,10 @@
         .header { display: flex; align-items: center; gap: 10px; }
         .bitcoin-logo { width: 40px; height: 40px; }
         .bitcoin-logo:hover {fill: #a36110; }
-        #grandTotal { font-size: 1.2em; font-weight: bold; margin-top: 10px; text-align: center; text-shadow: 2px 2px 4px #000000; }
+        #grandTotal { font-size: 1em; font-weight: bold; margin-top: 10px; text-align: center; text-shadow: 2px 2px 4px #000000; }
+        #subTotal { font-size: 1em; font-weight: bold; margin-top: 10px; text-align: center; text-shadow: 2px 2px 4px #000000; }
+        #tipTotal { font-size: 1em; font-weight: bold; margin-top: 10px; text-align: center; text-shadow: 2px 2px 4px #000000; }
+        #tipPerc { font-size: 14px; font-weight: bold; margin-top: 10px; text-align: center; text-shadow: 2px 2px 4px #000000; }
         .qrcode { text-align: center; margin-top: 2px; overflow: scroll; background-color: white !important; background-size: 363px 363px; }
         .qr-container { text-align: center; margin-top: 2px; overflow: auto; background-color: white !important; background-size: 363px 363px; }
         .tx-info-container { text-align: left; margin-top: 2px; overflow: hidden; background-color: #333; }
@@ -71,11 +74,11 @@
                 <p>-Create more tabs with Split:Tab button<br>
                     -Add items to each tab<br>
                     -Calulate (global) tip<br>
-                    -Round grand gotal <small>(Only changes Tab 1)</small><br>
+                    -Round grand gotal <small>(applied to Tab 1)</small><br>
                     -Generate invoices for each tab<br></p>
                 <p>Default settings point to a demo LNBits instance/wallet.<br>
                     Tips greatly apprectiated 😁🫴 </p>
-                <p>Click the bitcoin logo to change URL/KEY.</p>
+                <p>Click the bitcoin logo to change URL/KEY.</p> 
                 <button type="submit">Dismiss</button>
             </form>
         </div>
@@ -126,17 +129,19 @@
             <button onclick="applyTip(0.21)">21% Tip</button>
             <button onclick="applyTip(0.30)">30% Tip</button>
             <input type="number" id="customTipInput" placeholder="%" min="0" max="100" step="1">
-            <button onclick="applyCustomTip()">Apply Custom Tip</button>
+            <button onclick="applyCustomTip()">Apply Custom Tip</button><span id="tipPerc">Current Tip: <span id="tipTotalPercent">0</div>
 			<div class="rounding-buttons">
                 <button onclick="roundTotal('up')" id="roundUp">Round Up</button>
                 <button onclick="roundTotal('down')" id="roundDown">Round Down</button>
             </div>
         </div>
     </div>
-        <div id="grandTotal">Grand Total (All Tabs): $<span id="grandTotalAmount">0.00</span></div>
+        <div id="subTotal">Sub Total: $<span id="subTotalAmount">0.00</div>
+        <div id="tipTotal">Total Tip: $<span id="tipTotalAmount">0.00</div>
+        <div id="grandTotal">Grand Total: $<span id="grandTotalAmount">0.00</div>
     </div>
     <footer>
-         <p>p0.4.3<br>
+         <a href="https://github.com/BrashRatel/BrashRatel.github.io">p0.5.1<</a>
     </footer>
     <script>
         let tabCount = 1;
@@ -194,7 +199,9 @@
             document.getElementById(`itemCost${tabId}`).value = '';
             
             updateTotal(tabId);
+            updateSubTotal();
             updateGrandTotal();
+            updateTipTotal()
         }
 
         function editItem(itemId) {
@@ -227,7 +234,9 @@
                 itemElement.dataset.total = newTotal;
 
                 updateTotal(itemElement.closest('.tab').id.replace('tab', ''));
+                updateSubTotal();
                 updateGrandTotal();
+                updateTipTotal()
             }
         }
 
@@ -236,7 +245,9 @@
             const tabId = itemElement.closest('.tab').id.replace('tab', '');
             itemElement.remove();
             updateTotal(tabId);
+            updateSubTotal();
             updateGrandTotal();
+            updateTipTotal()
         }
 
         function updateTotal(tabId) {
@@ -247,7 +258,9 @@
             }
             document.getElementById(`total${tabId}`).textContent = total.toFixed(2);
             updateTotalWithTip(tabId, total);
+            updateSubTotal();
             updateGrandTotal();
+            updateTipTotal()
         }
 
         function updateTotalWithTip(tabId, total) {
@@ -258,7 +271,9 @@
         function applyTip(percentage) {
             currentTip = percentage;
             applyTipToAllTabs();
+            updateSubTotal();
             updateGrandTotal();
+            updateTipTotal()
         }
 
         function applyCustomTip() {
@@ -269,14 +284,18 @@
             }
             currentTip = customTip / 100;
             applyTipToAllTabs();
+            updateSubTotal();
             updateGrandTotal();
+            updateTipTotal()
         }
 
         function applyTipToAllTabs() {
             for (let i = 1; i <= tabCount; i++) {
                 const total = parseFloat(document.getElementById(`total${i}`).textContent);
                 updateTotalWithTip(i, total);
+                updateSubTotal();
                 updateGrandTotal();
+                updateTipTotal()
             }
         }
 
@@ -335,6 +354,44 @@
             }
         }
 
+        function updateSubTotal() {
+            let subTotal = 0;
+            const tabs = document.getElementsByClassName('tab');
+            for (let i = 0; i < tabs.length; i++) {
+                const tabId = tabs[i].id.replace('tab', '');
+                const totalNoTipElement = document.getElementById(`total${tabId}`);
+                if (totalNoTipElement) {
+                    subTotal += parseFloat(totalNoTipElement.textContent);
+                }
+            }
+            document.getElementById('subTotalAmount').textContent = subTotal.toFixed(2);
+        }
+
+        function updateTipTotal() {
+            const SubTotal = document.getElementById('subTotalAmount').textContent;
+            const GrandTotal = document.getElementById('grandTotalAmount').textContent;
+            var resultElement = document.getElementById('tipTotalPercent');
+            var tipAmount = (parseFloat(GrandTotal) - parseFloat(SubTotal)).toFixed(2);
+            
+            var subTotalFloat = parseFloat(SubTotal);
+            var grandTotalFloat = parseFloat(GrandTotal);
+
+            document.getElementById('tipTotalAmount').textContent = tipAmount;
+
+            if (isNaN(subTotalFloat) || isNaN(grandTotalFloat)) {
+                resultElement.textContent = "Invalid input";
+                return;
+            }
+
+            if (grandTotalFloat === 0) {
+                resultElement.textContent = "Cannot divide by zero";
+                return;
+            }
+
+            var percentage = (tipAmount / subTotalFloat) * 100;
+            resultElement.textContent = percentage.toFixed(0) + "%";
+        }
+
         function updateGrandTotal() {
             let grandTotal = 0;
             const tabs = document.getElementsByClassName('tab');
@@ -369,6 +426,7 @@
 			const currentTotalWithTip = parseFloat(totalWithTip1Element.textContent);
 			const newTotalWithTip = (currentTotalWithTip + difference).toFixed(2);
 			totalWithTip1Element.textContent = newTotalWithTip;
+            updateTipTotal()
 	
         }
 
