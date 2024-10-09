@@ -56,6 +56,16 @@
         .info-form button { padding: 10px; background-color: #f7931a; color: white; border: none; cursor: pointer; font-size: 16px; }
         .info-form button:hover { background-color: #e88a18; }
     </style>
+    <!-- For all browsers -->
+    <link rel="icon" type="image/png" sizes="32x32" href="logo_32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="logo_16x16.png">
+    <!-- For Google and Android -->
+    <link rel="icon" type="image/png" sizes="48x48" href="logo_48x48.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="logo_192x192.png">
+    <!-- For iPad -->
+    <link rel="apple-touch-icon" type="image/png" sizes="167x167" href="logo_167x167.png">
+    <!-- For iPhone -->
+    <link rel="apple-touch-icon" type="image/png" sizes="180x180" href="logo_180x180.png">
 </head>
 <body onload="openInfoModal()"> 
 <body>
@@ -89,7 +99,7 @@
             <span class="close" onclick="closeSettingsModal()">&times;</span>
             <h2>Settings</h2>
             <form class="settings-form" onsubmit="saveSettings(event)">
-                <em>LNBits API URL <small> (Append "/api/v1" to site address)</small></em>
+                <em>LNBits API URL</em>
                 <input type="text" id="apiUrl" placeholder="API URL">
                 <em>LNBits API Key <small> Replace with your actual LNBits API key</small></em>
                 <input type="text" id="apiKey" placeholder="API Key">
@@ -141,13 +151,13 @@
         <div id="grandTotal">Grand Total: $<span id="grandTotalAmount">0.00</div>
     </div>
     <footer>
-         <a href="https://github.com/BrashRatel/BrashRatel.github.io">p0.5.1<</a>
+         <a href="https://github.com/BrashRatel/BrashRatel.github.io">p0.5.3</a>
     </footer>
     <script>
         let tabCount = 1;
         let currentTip = 0;
 
-        let API_URL = 'https://demo.lnbits.com/api/v1'; // Replace with your LNBits instance URL if different
+        let API_URL = 'https://demo.lnbits.com'; // Replace with your LNBits instance URL if different
         let API_KEY = 'af244e6032ae47b6872973721a0be66c'; // Replace with your LNBits API key
 
         date = new Date().toLocaleDateString();
@@ -448,12 +458,6 @@
             console.log('Settings saved:', { API_URL, API_KEY });
         }
 
-        window.onclick = function(event) {
-            if (event.target == document.getElementById('settingsModal')) {
-                closeSettingsModal();
-            }
-        }
-
         function openInfoModal() {
             document.getElementById('infoModal').style.display = 'block';
         }
@@ -462,15 +466,16 @@
             document.getElementById('infoModal').style.display = 'none';
         }
 
-        function dissInfo(diss) {
+        function dissInfo() {
             event.preventDefault();
             closeInfoModal();
         }
 
-        window.onclick = function(diss) {
-            if (diss.target == document.getElementById('infoModal')) {
+        window.onclick = function(event) {
+            if (event.target == document.getElementById('infoModal')) {
                 closeInfoModal();
-            }
+            } else if (event.target == document.getElementById('settingsModal')) {
+                closeSettingsModal(); }
         }
 
         async function createPayment(tabId) {
@@ -480,7 +485,7 @@
             //
             const usdAmount = parseFloat(document.getElementById(`totalWithTip${tabId}`).textContent );
             try {
-                const conversionResponse = await axios.post(`${API_URL}/conversion`, {
+                const conversionResponse = await axios.post(`${API_URL}/api/v1/conversion`, {
                     from_: `usd`,
                     amount: usdAmount,
                     to: `sat`
@@ -491,7 +496,7 @@
                 const satsAmount = conversionResponse.data.sats;
 
                 // Create payment
-                const paymentResponse = await axios.post(`${API_URL}/payments`, {
+                const paymentResponse = await axios.post(`${API_URL}/api/v1/payments`, {
                     out: false,
                     amount: satsAmount,
                     memo: `Payment of ${usdAmount} USD for Tab ${tabId} on ${date}`
@@ -500,7 +505,7 @@
                 });
 
                 // Generate QR code
-                const qrCodeResponse = await axios.get(`${API_URL}/qrcode/${paymentResponse.data.payment_request}`, {
+                const qrCodeResponse = await axios.get(`${API_URL}/api/v1/qrcode/${paymentResponse.data.payment_request}`, {
                     responseType: 'blob'
                 });
                 const qrCodeUrl = URL.createObjectURL(qrCodeResponse.data);
