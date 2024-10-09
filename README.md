@@ -1,20 +1,55 @@
-# 🗲Split🗲Tab🗲
+# ⚡ Split🗲Tab
 
-## Tool to split tabs/checks and invoice friends via lightning ##
+## Lightning-Powered Tool for Splitting Tabs and Invoicing Friends
 
-This page was generated mostly with Claude AI with and quite a bit of steering and debugging from me. I had a need, so I figured I'd give it a shot. Feel free to submit a PR if you have any changes or improvements. **I have no idea what I'm doing!**🫠
+SplitTab is an innovative web application designed to simplify the process of splitting bills and invoicing friends using Lightning Network technology.
 
-### What does it do...? ###
+## 🚀 Features
 
-It uses HTML CSS and JavaScript to present a webpage that allows a user to enter in items/qnty/cost then split tabs and rearrange items as necessary.
-It also has some functions that will contact a LNBits server and request invoices then present them inline with each tab.
+- **Easy Tab Splitting**: Enter items, quantities, and costs to split tabs effortlessly.
+- **Flexible Item Management**: Rearrange items as needed for accurate bill distribution.
+- **Lightning Network Integration**: Generate invoices directly through LNBits server integration.
+- **Customizable Settings**: Configure your own LNBits server and wallet information.
 
-I set it up under a github.pages with the demo LNbits server and a demo wallet I created, but you should easily be able to download the HTML and host it locally then change the LNBits info to your own. 
+## 🛠️ Technology Stack
 
-I even added a gear on the top right of the interface so then you can input/change the LNBits info on demand, and since the API key only lives in client memory (and isn't sent back to github) it's pretty safe to use in this hosted fashion.
+- HTML
+- CSS
+- JavaScript
+- Github Pages
 
-### Harvest that 🌽 ###
+## 🔧 Setup and Configuration
 
-If you like it let me know by sending me a tip! The default LNBits info of the page points to a demo wallet I setup. 😃🫴https://split.r00t.co
+1. **Quick Start**: Visit our [GitHub Pages demo](https://split.r00t.co) to try SplitTab with a demo LNBits server and wallet.
 
+2. **Local Setup**:
+   - Download the HTML file from this repository.
+   - Host it locally on your preferred web server.
+   - Update the LNBits information to connect to your personal server and wallet.
 
+3. **Custom Configuration**:
+   - Click the bitcoin icon in the top left corner of the interface to input or modify your LNBits information on-the-fly.
+
+## 🔒 Security
+
+Your API key is stored only in client memory and is never transmitted back to GitHub, ensuring safe usage even when hosted online.
+
+## 🤝 Contributing
+
+We welcome contributions! If you have ideas for improvements or bug fixes, please feel free to submit a Pull Request.
+
+## 🌟 Support the Project
+
+If you find Split🗲Tab useful, consider sending a tip to our demo wallet. Your support helps us continue development and maintenance of this project.
+
+## 📝 Disclaimer
+
+This project was developed with the assistance of Claude AI and represents an experimental approach to solving a common need. While functional, it may require further refinement and testing.
+
+## 📄 License
+
+GNU General Public License v3.0
+
+---
+
+Created with ❤️ by [Brash]
