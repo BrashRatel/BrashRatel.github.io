@@ -1,8 +1,8 @@
 let tabCount = 1;
 let currentTip = 0;
 
-let API_URL = 'https://lnbits.r00t.co'; // Replace with your LNBits instance URL if different
-let API_KEY = '86f3ea1fe3a94d1e905a9be1861bb2be'; // Replace with your LNBits API key
+let API_URL = 'https://demo.lnbits.com'; // Replace with your LNBits instance URL if different
+let API_KEY = 'af244e6032ae47b6872973721a0be66c'; // Replace with your LNBits API key
 
 date = new Date().toLocaleDateString();
 const loadingDiv = document.getElementById('loading');
@@ -394,7 +394,7 @@ function pollPaymentStatus(tabId, paymentHash) {
                 
                 // Change QR code to success animation
                 const qrCodeElement = document.getElementById(`qrcode${tabId}`);
-                qrCodeElement.innerHTML = `<img src="ani1.gif" alt="Payment Received" style="width: 363px; height: 363px;">`;
+                qrCodeElement.innerHTML = `<img src="/img/ani1.gif" alt="Payment Received" style="width: 363px; height: 363px;">`;
                 
                 // Disable the "Create LN Invoice" button
                 document.querySelector(`#tab${tabId} button[onclick="createPayment(${tabId})"]`).disabled = true;
