@@ -24,7 +24,7 @@ Split🗲Tab is a simple web app designed to simplify the process of splitting b
 1. **Quick Start**: Visit the [GitHub Page](https://split.r00t.co) instance to try Split🗲Tab with my LNBits server/wallet. 
 
 >[!NOTE]
->Only donate or test with small amounts to default wallet, use info below if you'd like to contribute anything substantial.
+>Only test with small amounts to default instance, use info below if you'd like to use in production or contribute anything substantial.
 
 2. **Change LNBits Config**:
    - Click the Bitcoin icon in the top left corner of the interface to modify LNBits URL/KEY information on-the-fly.
@@ -32,7 +32,7 @@ Split🗲Tab is a simple web app designed to simplify the process of splitting b
 3. **Local Setup (Optional)**:
    - Clone or download a zip of this repository.
    - Host it locally on your preferred web server.
-   - Update the LNBits information in `tab_split_0.2.js` to connect to your personal server and wallet by default.
+   - Update the LNBits information in `tab_split_0.3.js` to connect to your personal server and wallet by default.
 
 ## 🔒 Security
 
@@ -65,4 +65,4 @@ This project was developed with the assistance of Claude AI and represents an ex
 
 ---
 
-Created by a 🤖 and some help from ฿rash 
+Created by a 🤖 and some help from [฿rash](https://github.com/BrashRatel) 
