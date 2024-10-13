@@ -4,7 +4,7 @@ let tabCount = 1;
 let currentTip = 0;
 
 let API_URL = 'https://lnbits.r00t.co'; // Replace with your LNBits instance URL if different
-let API_KEY = '86f3ea1fe3a94d1e905a9be1861bb2be'; // Replace with your LNBits API key
+let API_KEY = 'be4a427526ed4c278b8ba8af4d776722'; // Replace with your LNBits API key
 
 date = new Date().toLocaleDateString();
 const loadingDiv = document.getElementById('loading');
