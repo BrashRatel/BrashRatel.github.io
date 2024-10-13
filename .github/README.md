@@ -17,6 +17,7 @@ Split🗲Tab is a simple web app designed to simplify the process of splitting b
 - HTML
 - CSS
 - JavaScript
+- Bitcoin + Lightning + LNBits
 - Github Pages
 
 ## 🔧 Setup and Config
@@ -59,9 +60,17 @@ This project was developed with the assistance of Claude AI and represents an ex
 [GNU General Public License v3.0](.githhub/LICENSE)
 
 ## 🔨 ToDo: ##
-- [x] Add payment success notice and animation
+- [x] Drag and drop between tabs
+- [x] Round grand total up/down to nearest dollar.
+- [x] Poll LNBits server for USD/SAT exchange rate.
+- [x] Poll LNBits for invoice in SATs.
+- [x] Present QR code inline with each tab.
+- [x] Add payment success notice and animation.
+- [x] Make on-the-fly URL/KEY configuration changes.
+- [ ] 
+- [ ] \(Optional) Look into adding sharing functions to send invoices once created.
 - [ ] \(Optional) Find a better animation for completed payment.
-- [ ] \(Optional) Look into adding OCR to import initial group tab.
+- [ ] \(Optional) Look into adding OCR to import initial group tab via picture.
 
 ---
 
