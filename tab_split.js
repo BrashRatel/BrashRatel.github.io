@@ -1,17 +1,16 @@
-//tab_split_0.3.js
-
+// Global variables
 let tabCount = 1;
 let currentTip = 0;
-
 let API_URL = 'https://lnbits.r00t.co'; // Replace with your LNBits instance URL if different
-let API_KEY = 'be4a427526ed4c278b8ba8af4d776722'; // Replace with your LNBits API key
+let API_KEY = '86f3ea1fe3a94d1e905a9be1861bb2be'; // Replace with your LNBits API key
+const date = new Date().toLocaleDateString();
 
-date = new Date().toLocaleDateString();
+// DOM elements
 const loadingDiv = document.getElementById('loading');
 const createButton = document.getElementById('createButton');
 const tx_info = document.getElementById('info');
 const qrCodeElement = document.getElementById('qrcode');
-
+// Tab management functions
 function addItem(tabId) {
     const item = document.getElementById(`item${tabId}`).value.trim();
     const quantity = document.getElementById(`quantity${tabId}`).value;
@@ -57,7 +56,6 @@ function addItem(tabId) {
     updateTotal(tabId);
     updateSubTotal();
     updateGrandTotal();
-    updateTipTotal()
 }
 
 function editItem(itemId) {
@@ -92,7 +90,6 @@ function editItem(itemId) {
         updateTotal(itemElement.closest('.tab').id.replace('tab', ''));
         updateSubTotal();
         updateGrandTotal();
-        updateTipTotal()
     }
 }
 
@@ -103,58 +100,7 @@ function removeItem(itemId) {
     updateTotal(tabId);
     updateSubTotal();
     updateGrandTotal();
-    updateTipTotal()
 }
-
-function updateTotal(tabId) {
-    const items = document.getElementById(`list${tabId}`).getElementsByClassName('item');
-    let total = 0;
-    for (let item of items) {
-        total += parseFloat(item.dataset.total);
-    }
-    document.getElementById(`total${tabId}`).textContent = total.toFixed(2);
-    updateTotalWithTip(tabId, total);
-    updateSubTotal();
-    updateGrandTotal();
-    updateTipTotal()
-}
-
-function updateTotalWithTip(tabId, total) {
-    const totalWithTip = total * (1 + currentTip);
-    document.getElementById(`totalWithTip${tabId}`).textContent = totalWithTip.toFixed(2);
-}
-
-function applyTip(percentage) {
-    currentTip = percentage;
-    applyTipToAllTabs();
-    updateSubTotal();
-    updateGrandTotal();
-    updateTipTotal()
-}
-
-function applyCustomTip() {
-    const customTip = parseFloat(document.getElementById('customTipInput').value);
-    if (isNaN(customTip) || customTip < 0 || customTip > 100) {
-        alert("Please enter a valid tip percentage between 0 and 100.");
-        return;
-    }
-    currentTip = customTip / 100;
-    applyTipToAllTabs();
-    updateSubTotal();
-    updateGrandTotal();
-    updateTipTotal()
-}
-
-function applyTipToAllTabs() {
-    for (let i = 1; i <= tabCount; i++) {
-        const total = parseFloat(document.getElementById(`total${i}`).textContent);
-        updateTotalWithTip(i, total);
-        updateSubTotal();
-        updateGrandTotal();
-        updateTipTotal()
-    }
-}
-
 function splitTab() {
     tabCount++;
     const newTab = document.createElement('div');
@@ -170,9 +116,13 @@ function splitTab() {
             <button onclick="addItem(${tabCount})">Add Item</button>
         </div>
         <div id="error${tabCount}" class="error"></div>
-        <div class="total">Total: $<span id="total${tabCount}">0.00</span></div>
-        <div class="total-with-tip">Total with Tip: $<span id="totalWithTip${tabCount}">0.00</span></div>
-        <button onclick="createPayment(${tabCount})" id="createButton">Create LN Invoice</button>
+        <div class="tabsubtotal">Sub Total: $<span id="tabsubtotal${tabCount}">0.00</span></div>
+        <div class="tabtax">Tax: $<span id="tabtax${tabCount}">0.00</span></div>
+        <div class="tabtip">Tip: $<span id="tabtip${tabCount}">0.00</span></div>
+        <div class="tabtotal">Tab Total: $<span id="tabtotal${tabCount}">0.00</span></div>
+        <div class="create-button">
+                <button onclick="createPayment(1)" id="createButton">Create LN Invoice</button>
+                </div>
         <div id="info${tabCount}" class="tx-info-container"></div>
         <div id="qrcode${tabCount}" class="qr-container"></div>
         </div>
@@ -180,7 +130,7 @@ function splitTab() {
     `;
     document.getElementById('tabContainer').appendChild(newTab);
 }
-
+// Drag and Drop functions
 function allowDrop(ev) {
     ev.preventDefault();
 }
@@ -209,18 +159,88 @@ function drop(ev) {
         updateTotal(targetTabId);
     }
 }
+// Total Tip and Tax calculation functions
+function updateTotal(tabId) {
+    const items = document.getElementById(`list${tabId}`).getElementsByClassName('item');
+    let total = 0;
+    for (let item of items) {
+        total += parseFloat(item.dataset.total);
+    }
+    document.getElementById(`tabsubtotal${tabId}`).textContent = total.toFixed(2);
+    updateTotalWithTip(tabId, total);
+    updateSubTotal();
+    updateTaxTotal();
+    updateGrandTotal();
+}
+
+function updateTotalWithTip(tabId, newTotal) {
+    const tipPercentage = currentTip;
+    const tipAmount = newTotal * tipPercentage;
+    const totalWithTip = newTotal + tipAmount;
+    
+    document.getElementById(`tabtip${tabId}`).textContent = tipAmount.toFixed(2);
+    document.getElementById(`tabtotal${tabId}`).textContent = totalWithTip.toFixed(2);
+}
+
+function applyTip(percentage) {
+    currentTip = percentage;
+    applyTipToAllTabs();
+    updateSubTotal();
+    updateTaxTotal();
+    updateGrandTotal();
+    updateTipTotal()
+}
+
+function applyCustomTip() {
+    const customTipInput = document.getElementById('customTipInput');
+    const customTip = parseFloat(customTipInput.value);
+    if (isNaN(customTip) || customTip < 0 || customTip > 100) {
+        alert("Please enter a valid tip percentage between 0 and 100.");
+        customTipInput.value = ''; // Clear invalid input
+        return;
+    }
+    currentTip = customTip / 100;
+    applyTipToAllTabs();
+    updateSubTotal();
+    updateTaxTotal();
+    updateGrandTotal();
+    updateTipTotal();
+    customTipInput.value = ''; // Clear input after successful application
+}
+
+function applyTipToAllTabs() {
+    for (let i = 1; i <= tabCount; i++) {
+        const tabsubtotal = parseFloat(document.getElementById(`tabsubtotal${i}`).textContent);
+        const tabtax = parseFloat(document.getElementById(`tabtax${i}`).textContent);
+        const total = tabsubtotal + tabtax;
+        updateTotalWithTip(i, total);
+        updateSubTotal();
+        updateTaxTotal();
+        updateGrandTotal();
+        updateTipTotal()
+    }
+}
 
 function updateSubTotal() {
     let subTotal = 0;
     const tabs = document.getElementsByClassName('tab');
     for (let i = 0; i < tabs.length; i++) {
         const tabId = tabs[i].id.replace('tab', '');
-        const totalNoTipElement = document.getElementById(`total${tabId}`);
-        if (totalNoTipElement) {
-            subTotal += parseFloat(totalNoTipElement.textContent);
-        }
+        const tabSubtotal = parseFloat(document.getElementById(`tabsubtotal${tabId}`).textContent);
+        subTotal += tabSubtotal;
     }
     document.getElementById('subTotalAmount').textContent = subTotal.toFixed(2);
+}
+
+function updateTaxTotal() {
+    let subTotal = 0;
+    const tabs = document.getElementsByClassName('tab');
+    for (let i = 0; i < tabs.length; i++) {
+        const tabId = tabs[i].id.replace('tab', '');
+        const tabSubtotal = parseFloat(document.getElementById(`tabtax${tabId}`).textContent);
+        subTotal += tabSubtotal;
+    }
+    document.getElementById('taxTotalAmount').textContent = subTotal.toFixed(2);
 }
 
 function updateTipTotal() {
@@ -253,10 +273,8 @@ function updateGrandTotal() {
     const tabs = document.getElementsByClassName('tab');
     for (let i = 0; i < tabs.length; i++) {
         const tabId = tabs[i].id.replace('tab', '');
-        const totalWithTipElement = document.getElementById(`totalWithTip${tabId}`);
-        if (totalWithTipElement) {
-            grandTotal += parseFloat(totalWithTipElement.textContent);
-        }
+        const tabTotal = parseFloat(document.getElementById(`tabtotal${tabId}`).textContent);
+        grandTotal += tabTotal;
     }
     document.getElementById('grandTotalAmount').textContent = grandTotal.toFixed(2);
 }
@@ -278,14 +296,60 @@ function roundTotal(direction) {
 
 	grandTotalElement.textContent = roundedTotal.toFixed(2);
 
-	const totalWithTip1Element = document.getElementById('totalWithTip1');
+	const totalWithTip1Element = document.getElementById('tabtotal1');
 	const currentTotalWithTip = parseFloat(totalWithTip1Element.textContent);
 	const newTotalWithTip = (currentTotalWithTip + difference).toFixed(2);
 	totalWithTip1Element.textContent = newTotalWithTip;
-    updateTipTotal()
+    updateGrandTotal();
 	
 }
+function applyTotalTax() {
+    const totalTaxInput = document.getElementById('totalTaxInput');
+    const totalTax = parseFloat(totalTaxInput.value);
 
+    if (isNaN(totalTax) || totalTax < 0) {
+        alert("Please enter a valid tax amount (non-negative number).");
+        totalTaxInput.value = ''; // Clear invalid input
+        return;
+    }
+
+    const tabs = document.getElementsByClassName('tab');
+    let totalBeforeTax = 0;
+
+    // Calculate the total amount before tax
+    for (let i = 0; i < tabs.length; i++) {
+        const tabId = tabs[i].id.replace('tab', '');
+        const tabSubtotal = parseFloat(document.getElementById(`tabsubtotal${tabId}`).textContent);
+        totalBeforeTax += tabSubtotal;
+    }
+
+    if (totalBeforeTax === 0) {
+        alert("Cannot apply tax. Total before tax is zero.");
+        totalTaxInput.value = '';
+        return;
+    }
+    // Apply tax proportionally to each tab
+    for (let i = 0; i < tabs.length; i++) {
+        const tabId = tabs[i].id.replace('tab', '');
+        const tabSubtotal = parseFloat(document.getElementById(`tabsubtotal${tabId}`).textContent);
+        const tabTax = (tabSubtotal / totalBeforeTax) * totalTax;
+
+        document.getElementById(`tabtax${tabId}`).textContent = tabTax.toFixed(2);
+
+        const currentTip = parseFloat(document.getElementById(`tabtip${tabId}`).textContent) || 0;
+        const newTabTotal = tabSubtotal + tabTax + currentTip;
+        document.getElementById(`tabtotal${tabId}`).textContent = newTabTotal.toFixed(2);
+    }
+
+    // Update subtotal, grand total, and tip total
+    updateSubTotal();
+    updateTaxTotal();
+    updateGrandTotal();
+
+    // Clear the tax input field
+    totalTaxInput.value = '';
+}
+// Modal functions
 function openSettingsModal() {
     document.getElementById('settingsModal').style.display = 'block';
     document.getElementById('apiUrl').value = API_URL;
@@ -316,21 +380,28 @@ function dissInfo() {
     event.preventDefault();
     closeInfoModal();
 }
-
+// Event listeners
 window.onclick = function(event) {
     if (event.target == document.getElementById('infoModal')) {
         closeInfoModal();
     } else if (event.target == document.getElementById('settingsModal')) {
         closeSettingsModal(); }
 }
-
+// Payment functions
 async function createPayment(tabId) {
-    //let result = 0;
     document.getElementById("overlay").style.display = "block";
-    createPayment.disabled = true;
-    //
-    const usdAmount = parseFloat(document.getElementById(`totalWithTip${tabId}`).textContent );
+    const createButton = document.querySelector(`#tab${tabId} button[onclick="createPayment(${tabId})"]`);
+    createButton.disabled = true;
+    const errorElement = document.getElementById(`error${tabId}`);
+    const infoElement = document.getElementById(`info${tabId}`);
+    const qrCodeElement = document.getElementById(`qrcode${tabId}`);
+
     try {
+        const usdAmount = parseFloat(document.getElementById(`tabtotal${tabId}`).textContent);
+        if (isNaN(usdAmount) || usdAmount <= 0) {
+            throw new Error("Invalid amount. Please check the tab total.");
+        }
+
         const conversionResponse = await axios.post(`${API_URL}/api/v1/conversion`, {
             from_: `usd`,
             amount: usdAmount,
@@ -341,7 +412,6 @@ async function createPayment(tabId) {
 
         const satsAmount = conversionResponse.data.sats;
 
-        // Create payment
         const paymentResponse = await axios.post(`${API_URL}/api/v1/payments`, {
             out: false,
             amount: satsAmount,
@@ -350,37 +420,33 @@ async function createPayment(tabId) {
             headers: { 'X-Api-Key': API_KEY }
         });
 
-        // Generate QR code
         const qrCodeResponse = await axios.get(`${API_URL}/api/v1/qrcode/${paymentResponse.data.payment_request}`, {
             responseType: 'blob'
         });
         const qrCodeUrl = URL.createObjectURL(qrCodeResponse.data);
 
-
-        // Display payment details
-        document.getElementById(`info${tabId}`).innerHTML = `
+        infoElement.innerHTML = `
             Amount: ${usdAmount} USD (${satsAmount} sats)<br>
             Payment hash: ${paymentResponse.data.payment_hash}<br>
             Payment request: ${paymentResponse.data.payment_request}<br>
             <div id="paymentStatus${tabId}">Payment status: Pending</div>
         `;
 
-        // Display payment details
-        document.getElementById(`qrcode${tabId}`).innerHTML = `
+        qrCodeElement.innerHTML = `
             <img src="${qrCodeUrl}" alt="Payment QR Code"> <br>
         `;
 
-        // Start polling for payment status
         pollPaymentStatus(tabId, paymentResponse.data.payment_hash);
 
     } catch (error) {
-        document.getElementById(`error${tabId}`).textContent = `Failed to create invoice: ${error.message}. Please try again.`;
-        document.getElementById(`qrcode${tabId}`).innerHTML = ''; // Clear QR code in case of error
+        console.error('Error in createPayment:', error);
+        errorElement.textContent = `Failed to create invoice: ${error.message}. Please try again.`;
+        qrCodeElement.innerHTML = ''; // Clear QR code in case of error
     } finally {
         document.getElementById("overlay").style.display = "none";
         createButton.disabled = false;
     }
-}  
+}
 function pollPaymentStatus(tabId, paymentHash) {
     const pollInterval = setInterval(async () => {
         try {

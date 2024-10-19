@@ -33,7 +33,7 @@ Split🗲Tab is a simple web app designed to simplify the process of splitting b
 3. **Local Setup (Optional)**:
    - Clone or download a zip of this repository.
    - Host it locally on your preferred web server.
-   - Update the LNBits information in `tab_split_0.3.js` to connect to your personal server and wallet by default.
+   - Update the LNBits information in `tab_split.js` to connect to your personal server and wallet by default.
 
 ## 🔒 Security
 

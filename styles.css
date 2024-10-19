@@ -4,12 +4,12 @@ body { font-family: Arial, sans-serif; max-width: 1200px; margin: 0 auto; paddin
 .itemized-list { min-height: 100px; border: 1px dashed #999; padding: 10px; margin-bottom: 10px; border-radius: 5px; }
 .item { background-color: #555; margin: 5px 0; padding: 10px; border-radius: 3px; cursor: move; display: flex; justify-content: space-between; align-items: center; transition: background-color 0.3s; }
 .item:hover { background-color: #666; }
-.tip-buttons, .controls { margin-top: 5px; }
+.tip-buttons, .controls, .tax-button { margin-top: 5px; }
 button { margin-right: 10px; margin-top: 4px; padding: 8px 15px; background-color: #f7931a; text-shadow: 2px 2px 4px #000000; color: white; border: none; border-radius: 4px; cursor: pointer; transition: background-color 0.3s; }
 button:hover { background-color: #a36110; }
 button:disabled { background-color: #585757; cursor: not-allowed; }
 input { margin-bottom: 10px; padding: 8px; border: 1px solid #ccc; border-radius: 4px; background-color: #555; color: #fff; }
-.total, .total-with-tip { font-weight: bold; margin-top: 10px; }
+.tabsubtotal, .tabtax, .tabtip, .tabtotal { ; margin-top: 5px; text-align: end; }
 .error { color: #ff6b6b; margin-top: 5px; }
 .edit-buttons { display: flex; gap: 5px; }
 .edit-buttons button { padding: 2px 5px; font-size: 0.8em; }
@@ -17,13 +17,11 @@ input { margin-bottom: 10px; padding: 8px; border: 1px solid #ccc; border-radius
 .new-item { animation: fadeIn 0.5s; }
 h1, h2 { color: #f7931a; text-shadow: 2px 2px 4px #000000; }
 #customTipInput { width: 50px; margin-right: 5px; }
+#totalTaxInput { width: 90px; margin-right: 5px; }
 .header { display: flex; align-items: center; gap: 10px; }
 .bitcoin-logo { width: 40px; height: 40px; }
 .bitcoin-logo:hover {fill: #a36110; }
-#grandTotal { font-size: 1em; font-weight: bold; margin-top: 10px; text-align: center; text-shadow: 2px 2px 4px #000000; }
-#subTotal { font-size: 1em; font-weight: bold; margin-top: 10px; text-align: center; text-shadow: 2px 2px 4px #000000; }
-#tipTotal { font-size: 1em; font-weight: bold; margin-top: 10px; text-align: center; text-shadow: 2px 2px 4px #000000; }
-#tipPerc { font-size: 14px; font-weight: bold; margin-top: 10px; text-align: center; text-shadow: 2px 2px 4px #000000; }
+#grandTotal, #subTotal, #tipTotal, #tipPerc, #taxTotal { font-size: 1em; font-weight: bold; margin-top: 10px; text-align: center; text-shadow: 2px 2px 4px #000000; }
 .qrcode { text-align: center; margin-top: 2px; overflow: scroll; background-color: white !important; background-size: 363px 363px; }
 .qr-container { text-align: center; margin-top: 2px; overflow: auto; background-color: white !important; background-size: 363px 363px; }
 .tx-info-container { text-align: left; margin-top: 2px; overflow: hidden; background-color: #333; }
@@ -47,4 +45,4 @@ svg { filter: drop-shadow(2px 2px 4px rgb(0 0 0 / 0.8 )); }
 .info-form { display: flex; flex-direction: column; gap: 10px; }
 .info-form button { padding: 10px; background-color: #f7931a; color: white; border: none; cursor: pointer; font-size: 16px; }
 .info-form button:hover { background-color: #e88a18; }
-.rounding-buttons button { width: 100%; }
+.rounding-buttons button, .create-button button  { width: 100%; }

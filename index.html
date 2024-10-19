@@ -35,15 +35,16 @@
                     <li>Create multiple tabs using the "Split:Tab" button</li>
                     <li>Add and manage items within each tab</li>
                     <li>Calculate global tip across all tabs</li>
+                    <li>Add Sales Tax (after adding tip)</li>
                     <li>Round the grand total (applied to Tab 1)</li>
                     <li>Generate Lightning Network invoices for each tab</li>
                 </ul><br> 
-                Please note: The default settings are configured to use a demo LNBits instance/wallet.<br> 
+                Please note: The default settings are configured to use my LNBits instance/wallet.<br> 
                      <br>
                     To customize the application for your own use:<br> 
                 <ol>
                     <li>Click the Bitcoin logo in the top-left corner</li>
-                    <li>Enter your LNBits instance URL and API key in the settings and click save</li>
+                    <li>Enter your LNBits URL/API key in the settings, click save</li>
                 </ol>
                 <button type="submit">Dismiss</button>
             </form>
@@ -81,9 +82,13 @@
                 <button onclick="addItem(1)">Add Item</button>
             </div>
             <div id="error1" class="error"></div>
-            <div class="total">Total: $<span id="total1">0.00</span></div>
-            <div class="total-with-tip">Total with Tip: $<span id="totalWithTip1">0.00</span></div>
-            <button onclick="createPayment(1)" id="createButton">Create LN Invoice</button>
+            <div class="tabsubtotal">Sub Total: $<span id="tabsubtotal1">0.00</span></div>
+            <div class="tabtax">Tax: $<span id="tabtax1">0.00</span></div>
+            <div class="tabtip">Tip: $<span id="tabtip1">0.00</span></div>
+            <div class="tabtotal">Tab Total: $<span id="tabtotal1">0.00</span></div>
+            <div class="create-button">
+                <button onclick="createPayment(1)" id="createButton">Create LN Invoice</button>
+                </div>
             <div id="info1" class="tx-info-container"></div>
             <div id="qrcode1" class="qr-container"></div>
             </div>
@@ -96,6 +101,10 @@
             <button onclick="applyTip(0.30)">30% Tip</button>
             <input type="number" id="customTipInput" placeholder="%" min="0" max="100" step="1">
             <button onclick="applyCustomTip()">Apply Custom Tip</button><span id="tipPerc">Current Tip: <span id="tipTotalPercent">0</div>
+                <div class="tax-button">
+                    <input type="number" id="totalTaxInput" placeholder="$0.00" min=0 step="0.01">
+                    <button onclick="applyTotalTax()">Add Tax</button>
+                </div>
 			<div class="rounding-buttons">
                 <button onclick="roundTotal('up')" id="roundUp">Round Up</button>
                 <button onclick="roundTotal('down')" id="roundDown">Round Down</button>
@@ -103,12 +112,13 @@
         </div>
     </div>
         <div id="subTotal">Sub Total: $<span id="subTotalAmount">0.00</div>
+        <div id="taxTotal">Total Tax: $<span id="taxTotalAmount">0.00</div>
         <div id="tipTotal">Total Tip: $<span id="tipTotalAmount">0.00</div>
         <div id="grandTotal">Grand Total: $<span id="grandTotalAmount">0.00</div>
     </div>
     <footer>
-         <a href="https://github.com/BrashRatel/BrashRatel.github.io">0.6</a>
+         <a href="https://github.com/BrashRatel/BrashRatel.github.io">0.7</a>
     </footer>
-    <script src="tab_split_0.3.js"></script>
+    <script src="tab_split.js"></script>
 </body>
 </html>
