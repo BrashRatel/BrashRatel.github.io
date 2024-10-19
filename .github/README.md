@@ -67,9 +67,11 @@ This project was developed with the assistance of Claude AI and represents an ex
 - [x] Present QR code inline with each tab.
 - [x] Add payment success notice and animation.
 - [x] Make on-the-fly URL/KEY configuration changes.
-- [ ] \(Optional) Look into adding sharing functions to send invoices once created.
-- [ ] \(Optional) Find a better animation for completed payment.
-- [ ] \(Optional) Look into adding OCR to import initial group tab via picture.
+- [x] Add html fields and functions to include sales tax.
+- [ ] Correct tax function issue - Currently must be applied before adding the tip or things get wonky.
+- [ ] \(Possible) Look into adding sharing functions to send invoices once created.
+- [ ] \(Possible) Find a better animation for completed payment.
+- [ ] \(Possible) Look into adding OCR to import initial group tab via picture.
 
 ---
 
