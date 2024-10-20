@@ -121,7 +121,7 @@ function splitTab() {
         <div class="tabtip">Tip: $<span id="tabtip${tabCount}">0.00</span></div>
         <div class="tabtotal">Tab Total: $<span id="tabtotal${tabCount}">0.00</span></div>
         <div class="create-button">
-                <button onclick="createPayment(1)" id="createButton">Create LN Invoice</button>
+                <button onclick="createPayment(${tabCount})" id="createButton">Create LN Invoice</button>
                 </div>
         <div id="info${tabCount}" class="tx-info-container"></div>
         <div id="qrcode${tabCount}" class="qr-container"></div>
