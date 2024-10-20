@@ -162,33 +162,33 @@ function drop(ev) {
 // Total Tip and Tax calculation functions
 function updateTotal(tabId) {
     const items = document.getElementById(`list${tabId}`).getElementsByClassName('item');
-    let total = 0;
+    let subtotal = 0;
     for (let item of items) {
-        total += parseFloat(item.dataset.total);
+        subtotal += parseFloat(item.dataset.total);
     }
-    document.getElementById(`tabsubtotal${tabId}`).textContent = total.toFixed(2);
-    updateTotalWithTip(tabId, total);
-    updateSubTotal();
-    updateTaxTotal();
-    updateGrandTotal();
+    document.getElementById(`tabsubtotal${tabId}`).textContent = subtotal.toFixed(2);
+    recalculateTabTotal(tabId);
 }
 
-function updateTotalWithTip(tabId, newTotal) {
+function recalculateTabTotal(tabId) {
+    const subtotal = parseFloat(document.getElementById(`tabsubtotal${tabId}`).textContent);
+    const tax = parseFloat(document.getElementById(`tabtax${tabId}`).textContent);
     const tipPercentage = currentTip;
-    const tipAmount = newTotal * tipPercentage;
-    const totalWithTip = newTotal + tipAmount;
-    
+
+    const tipAmount = subtotal * tipPercentage;
+    const total = subtotal + tax + tipAmount;
     document.getElementById(`tabtip${tabId}`).textContent = tipAmount.toFixed(2);
-    document.getElementById(`tabtotal${tabId}`).textContent = totalWithTip.toFixed(2);
+    document.getElementById(`tabtotal${tabId}`).textContent = total.toFixed(2);
+
+    updateSubTotal();
+    updateTaxTotal();
+    updateTipTotal();
+    updateGrandTotal();
 }
 
 function applyTip(percentage) {
     currentTip = percentage;
     applyTipToAllTabs();
-    updateSubTotal();
-    updateTaxTotal();
-    updateGrandTotal();
-    updateTipTotal()
 }
 
 function applyCustomTip() {
@@ -201,108 +201,15 @@ function applyCustomTip() {
     }
     currentTip = customTip / 100;
     applyTipToAllTabs();
-    updateSubTotal();
-    updateTaxTotal();
-    updateGrandTotal();
-    updateTipTotal();
     customTipInput.value = ''; // Clear input after successful application
 }
 
 function applyTipToAllTabs() {
     for (let i = 1; i <= tabCount; i++) {
-        const tabsubtotal = parseFloat(document.getElementById(`tabsubtotal${i}`).textContent);
-        const tabtax = parseFloat(document.getElementById(`tabtax${i}`).textContent);
-        const total = tabsubtotal + tabtax;
-        updateTotalWithTip(i, total);
-        updateSubTotal();
-        updateTaxTotal();
-        updateGrandTotal();
-        updateTipTotal()
+        recalculateTabTotal(i);
     }
 }
 
-function updateSubTotal() {
-    let subTotal = 0;
-    const tabs = document.getElementsByClassName('tab');
-    for (let i = 0; i < tabs.length; i++) {
-        const tabId = tabs[i].id.replace('tab', '');
-        const tabSubtotal = parseFloat(document.getElementById(`tabsubtotal${tabId}`).textContent);
-        subTotal += tabSubtotal;
-    }
-    document.getElementById('subTotalAmount').textContent = subTotal.toFixed(2);
-}
-
-function updateTaxTotal() {
-    let subTotal = 0;
-    const tabs = document.getElementsByClassName('tab');
-    for (let i = 0; i < tabs.length; i++) {
-        const tabId = tabs[i].id.replace('tab', '');
-        const tabSubtotal = parseFloat(document.getElementById(`tabtax${tabId}`).textContent);
-        subTotal += tabSubtotal;
-    }
-    document.getElementById('taxTotalAmount').textContent = subTotal.toFixed(2);
-}
-
-function updateTipTotal() {
-    const SubTotal = document.getElementById('subTotalAmount').textContent;
-    const GrandTotal = document.getElementById('grandTotalAmount').textContent;
-    var resultElement = document.getElementById('tipTotalPercent');
-    var tipAmount = (parseFloat(GrandTotal) - parseFloat(SubTotal)).toFixed(2);
-    
-    var subTotalFloat = parseFloat(SubTotal);
-    var grandTotalFloat = parseFloat(GrandTotal);
-
-    document.getElementById('tipTotalAmount').textContent = tipAmount;
-
-    if (isNaN(subTotalFloat) || isNaN(grandTotalFloat)) {
-        resultElement.textContent = "Invalid input";
-        return;
-    }
-
-    if (grandTotalFloat === 0) {
-        resultElement.textContent = "Cannot divide by zero";
-        return;
-    }
-
-    var percentage = (tipAmount / subTotalFloat) * 100;
-    resultElement.textContent = percentage.toFixed(0) + "%";
-}
-
-function updateGrandTotal() {
-    let grandTotal = 0;
-    const tabs = document.getElementsByClassName('tab');
-    for (let i = 0; i < tabs.length; i++) {
-        const tabId = tabs[i].id.replace('tab', '');
-        const tabTotal = parseFloat(document.getElementById(`tabtotal${tabId}`).textContent);
-        grandTotal += tabTotal;
-    }
-    document.getElementById('grandTotalAmount').textContent = grandTotal.toFixed(2);
-}
-
-function roundTotal(direction) {
-	const grandTotalElement = document.getElementById('grandTotalAmount');
-	const currentTotal = parseFloat(grandTotalElement.textContent);
-	let roundedTotal;
-
-	if (direction === 'up') {
-		roundedTotal = Math.ceil(currentTotal);
-        document.getElementById("roundUp").disabled = true;
-	} else {
-		roundedTotal = Math.floor(currentTotal);
-        document.getElementById("roundDown").disabled = true;
-	}
-
-	const difference = roundedTotal - currentTotal;
-
-	grandTotalElement.textContent = roundedTotal.toFixed(2);
-
-	const totalWithTip1Element = document.getElementById('tabtotal1');
-	const currentTotalWithTip = parseFloat(totalWithTip1Element.textContent);
-	const newTotalWithTip = (currentTotalWithTip + difference).toFixed(2);
-	totalWithTip1Element.textContent = newTotalWithTip;
-    updateGrandTotal();
-	
-}
 function applyTotalTax() {
     const totalTaxInput = document.getElementById('totalTaxInput');
     const totalTax = parseFloat(totalTaxInput.value);
@@ -328,6 +235,7 @@ function applyTotalTax() {
         totalTaxInput.value = '';
         return;
     }
+
     // Apply tax proportionally to each tab
     for (let i = 0; i < tabs.length; i++) {
         const tabId = tabs[i].id.replace('tab', '');
@@ -335,19 +243,59 @@ function applyTotalTax() {
         const tabTax = (tabSubtotal / totalBeforeTax) * totalTax;
 
         document.getElementById(`tabtax${tabId}`).textContent = tabTax.toFixed(2);
-
-        const currentTip = parseFloat(document.getElementById(`tabtip${tabId}`).textContent) || 0;
-        const newTabTotal = tabSubtotal + tabTax + currentTip;
-        document.getElementById(`tabtotal${tabId}`).textContent = newTabTotal.toFixed(2);
+        recalculateTabTotal(tabId);
     }
-
-    // Update subtotal, grand total, and tip total
-    updateSubTotal();
-    updateTaxTotal();
-    updateGrandTotal();
 
     // Clear the tax input field
     totalTaxInput.value = '';
+}
+
+function updateSubTotal() {
+    let subTotal = 0;
+    const tabs = document.getElementsByClassName('tab');
+    for (let i = 0; i < tabs.length; i++) {
+        const tabId = tabs[i].id.replace('tab', '');
+        const tabSubtotal = parseFloat(document.getElementById(`tabsubtotal${tabId}`).textContent);
+        subTotal += tabSubtotal;
+    }
+    document.getElementById('subTotalAmount').textContent = subTotal.toFixed(2);
+}
+
+function updateTaxTotal() {
+    let taxTotal = 0;
+    const tabs = document.getElementsByClassName('tab');
+    for (let i = 0; i < tabs.length; i++) {
+        const tabId = tabs[i].id.replace('tab', '');
+        const tabTax = parseFloat(document.getElementById(`tabtax${tabId}`).textContent);
+        taxTotal += tabTax;
+    }
+    document.getElementById('taxTotalAmount').textContent = taxTotal.toFixed(2);
+}
+
+function updateTipTotal() {
+    let tipTotal = 0;
+    const tabs = document.getElementsByClassName('tab');
+    for (let i = 0; i < tabs.length; i++) {
+        const tabId = tabs[i].id.replace('tab', '');
+        const tabTip = parseFloat(document.getElementById(`tabtip${tabId}`).textContent);
+        tipTotal += tabTip;
+    }
+    document.getElementById('tipTotalAmount').textContent = tipTotal.toFixed(2);
+
+    const subTotal = parseFloat(document.getElementById('subTotalAmount').textContent);
+    const tipPercentage = (tipTotal / subTotal) * 100;
+    document.getElementById('tipTotalPercent').textContent = tipPercentage.toFixed(0) + "%";
+}
+
+function updateGrandTotal() {
+    let grandTotal = 0;
+    const tabs = document.getElementsByClassName('tab');
+    for (let i = 0; i < tabs.length; i++) {
+        const tabId = tabs[i].id.replace('tab', '');
+        const tabTotal = parseFloat(document.getElementById(`tabtotal${tabId}`).textContent);
+        grandTotal += tabTotal;
+    }
+    document.getElementById('grandTotalAmount').textContent = grandTotal.toFixed(2);
 }
 // Modal functions
 function openSettingsModal() {
