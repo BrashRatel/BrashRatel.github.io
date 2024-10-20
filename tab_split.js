@@ -297,6 +297,29 @@ function updateGrandTotal() {
     }
     document.getElementById('grandTotalAmount').textContent = grandTotal.toFixed(2);
 }
+function roundTotal(direction) {
+	const grandTotalElement = document.getElementById('grandTotalAmount');
+	const currentTotal = parseFloat(grandTotalElement.textContent);
+	let roundedTotal;
+
+	if (direction === 'up') {
+		roundedTotal = Math.ceil(currentTotal);
+        document.getElementById("roundUp").disabled = true;
+	} else {
+		roundedTotal = Math.floor(currentTotal);
+        document.getElementById("roundDown").disabled = true;
+	}
+
+	const difference = roundedTotal - currentTotal;
+
+	grandTotalElement.textContent = roundedTotal.toFixed(2);
+
+	const totalWithTip1Element = document.getElementById('tabtotal1');
+	const currentTotalWithTip = parseFloat(totalWithTip1Element.textContent);
+	const newTotalWithTip = (currentTotalWithTip + difference).toFixed(2);
+	totalWithTip1Element.textContent = newTotalWithTip;
+    updateGrandTotal();
+}
 // Modal functions
 function openSettingsModal() {
     document.getElementById('settingsModal').style.display = 'block';

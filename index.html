@@ -35,11 +35,11 @@
                     <li>Create multiple tabs using the "Split:Tab" button</li>
                     <li>Add and manage items within each tab</li>
                     <li>Calculate global tip across all tabs</li>
-                    <li>Add Sales Tax (after adding tip)</li>
+                    <li>Add any tax if necessary</li>
                     <li>Round the grand total (applied to Tab 1)</li>
                     <li>Generate Lightning Network invoices for each tab</li>
                 </ul><br> 
-                Please note: The default settings are configured to use my LNBits instance/wallet.<br> 
+                The default settings are configured to use my LNBits instance/wallet.<br> 
                      <br>
                     To customize the application for your own use:<br> 
                 <ol>
@@ -58,7 +58,7 @@
             <form class="settings-form" onsubmit="saveSettings(event)">
                 <em>LNBits API URL</em>
                 <input type="text" id="apiUrl" placeholder="API URL">
-                <em>LNBits API Key <small> Replace with your actual LNBits API key</small></em>
+                <em>LNBits API Key</em>
                 <input type="text" id="apiKey" placeholder="API Key">
                 <button type="submit">Save</button>
             </form>
@@ -117,7 +117,7 @@
         <div id="grandTotal">Grand Total: $<span id="grandTotalAmount">0.00</div>
     </div>
     <footer>
-         <a href="https://github.com/BrashRatel/BrashRatel.github.io">0.7</a>
+         <a href="https://github.com/BrashRatel/BrashRatel.github.io">0.7.1</a>
     </footer>
     <script src="tab_split.js"></script>
 </body>
