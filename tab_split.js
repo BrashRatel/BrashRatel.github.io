@@ -1,4 +1,5 @@
 // Global variables
+//version 0.4.2
 let tabCount = 1;
 let currentTip = 0;
 let API_URL = 'https://lnbits.r00t.co'; // Replace with your LNBits instance URL if different
@@ -298,28 +299,52 @@ function updateGrandTotal() {
     document.getElementById('grandTotalAmount').textContent = grandTotal.toFixed(2);
 }
 function roundTotal(direction) {
-	const grandTotalElement = document.getElementById('grandTotalAmount');
-	const currentTotal = parseFloat(grandTotalElement.textContent);
-	let roundedTotal;
+    const grandTotalElement = document.getElementById('grandTotalAmount');
+    const currentTotal = parseFloat(grandTotalElement.textContent);
+    let roundedTotal;
 
-	if (direction === 'up') {
-		roundedTotal = Math.ceil(currentTotal);
+    if (direction === 'up') {
+        roundedTotal = Math.ceil(currentTotal);
         document.getElementById("roundUp").disabled = true;
-	} else {
-		roundedTotal = Math.floor(currentTotal);
+    } else {
+        roundedTotal = Math.floor(currentTotal);
         document.getElementById("roundDown").disabled = true;
-	}
+    }
 
-	const difference = roundedTotal - currentTotal;
+    const difference = roundedTotal - currentTotal;
 
-	grandTotalElement.textContent = roundedTotal.toFixed(2);
+    // Update the grand total
+    grandTotalElement.textContent = roundedTotal.toFixed(2);
 
-	const totalWithTip1Element = document.getElementById('tabtotal1');
-	const currentTotalWithTip = parseFloat(totalWithTip1Element.textContent);
-	const newTotalWithTip = (currentTotalWithTip + difference).toFixed(2);
-	totalWithTip1Element.textContent = newTotalWithTip;
-    updateGrandTotal();
+    // Update the tip total
+    const tipTotalElement = document.getElementById('tipTotalAmount');
+    const currentTipTotal = parseFloat(tipTotalElement.textContent);
+    const newTipTotal = (currentTipTotal + difference).toFixed(2);
+    tipTotalElement.textContent = newTipTotal;
+
+    // Update the tip percentage
+    updateTipPercentage();
+
+    // Optionally, update the first tab's total to reflect the change
+    const totalWithTip1Element = document.getElementById('tabtotal1');
+    const currentTotalWithTip = parseFloat(totalWithTip1Element.textContent);
+    const newTotalWithTip = (currentTotalWithTip + difference).toFixed(2);
+    totalWithTip1Element.textContent = newTotalWithTip;
+
+    // Update the tip for the first tab
+    const tipElement = document.getElementById('tabtip1');
+    const currentTip = parseFloat(tipElement.textContent);
+    const newTip = (currentTip + difference).toFixed(2);
+    tipElement.textContent = newTip;
 }
+
+function updateTipPercentage() {
+    const subTotal = parseFloat(document.getElementById('subTotalAmount').textContent);
+    const tipTotal = parseFloat(document.getElementById('tipTotalAmount').textContent);
+    const tipPercentage = (tipTotal / subTotal) * 100;
+    document.getElementById('tipTotalPercent').textContent = tipPercentage.toFixed(0) + "%";
+}
+
 // Modal functions
 function openSettingsModal() {
     document.getElementById('settingsModal').style.display = 'block';
